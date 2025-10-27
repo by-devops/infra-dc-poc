@@ -1,0 +1,2381 @@
+! Startup-config last modified at Thu Oct 23 01:59:34 2025 by admin
+! device: SW-SPINE-1-R1 (DCS-7504N, EOS-4.25.3M)
+!
+! boot system flash:/EOS-4.25.3M.swi
+!
+daemon TerminAttr
+   exec /usr/bin/TerminAttr -grpcaddr=10.6.112.1:5910 -allowed_ips=10.6.240.13/32
+   no shutdown
+!
+switchport default mode routed
+!
+ip igmp snooping vlan 640 fast-leave
+!
+service routing protocols model multi-agent
+!
+lldp management-address Ethernet3/33/1
+!
+no logging console
+logging host 10.6.240.149 514
+logging source-interface Management1/1
+!
+hostname SW-SPINE-1-R1
+!
+ptp domain 77
+ptp source ip 10.6.140.1
+ptp message-type general dscp 56 default
+ptp message-type event dscp 56 default
+ptp ttl 48
+ptp mode boundary
+ptp management all
+!
+platform sand multicast replication default fabric-egress
+!
+snmp-server community cisuss ro
+snmp-server community zabbix ro
+!
+spanning-tree mode rstp
+!
+aaa authorization exec default local
+aaa authorization commands all default local
+!
+no aaa root
+!
+username admin privilege 15 role network-admin secret sha512 $6$Am1eif4oTacCojku$BU5t9JtdgTT9qViNABHFnPvcsaDfSZ.rusYxPxvadV7Td2UYMJvi3N0TuSAM7pxVTynCdjhq.f74im2dybv0t.
+username cisuss secret sha512 $6$J.4bP7NbFKMhJHIH$vNTF4LAsn5wefN07WBdpKEFw851Kh6eYerb5l35Gz85OFec7bse8QSbIF1KF1zPkVycsNNHxQcb1FvVOBzxpd/
+username smartdash privilege 15 role smartdash secret sha512 $6$kV9n3dzMNTuzwrFk$i3JvoPpAq/fchMSBet0wQxPi7pqnwX5SEoInR.nHe1BTc9XDdeHhtRiEJQdzAX9m98g/Uewnx25/7V2vXHPIG0
+!
+role cisuss
+   10 deny command reload
+   20 deny mode config command .*
+   30 permit command show .*
+   35 permit command enable
+   40 permit command bash
+   50 deny command .*
+!
+role smartdash
+   10 deny command reload
+   20 deny mode config command .*
+   30 permit command show .*
+   35 permit command enable
+!
+clock timezone Europe/Moscow
+!
+vlan 110
+   name TO_R12_DEF_LINK
+!
+vlan 111
+   name TO_R11_DEF_LINK
+!
+vlan 120
+   name TO_R12_RED_LINK
+!
+vlan 121
+   name TO_R11_RED_LINK
+!
+vlan 606
+   name VRF_LEAKING_R1
+!
+vlan 640
+   name SMPTE_2110_R1
+!
+vrf instance RED
+!
+interface Ethernet3/1/1
+   description FUTURE USE
+   shutdown
+   speed forced 10000full
+   no switchport
+!
+interface Ethernet3/1/2
+   description FUTURE USE
+   shutdown
+   speed forced 10000full
+   no switchport
+!
+interface Ethernet3/1/3
+   description FUTURE USE
+   shutdown
+   speed forced 10000full
+   no switchport
+!
+interface Ethernet3/1/4
+   description FUTURE USE
+   shutdown
+   speed forced 10000full
+   no switchport
+!
+interface Ethernet3/2/1
+   description DMV_4.1_RED
+   speed forced 40gfull
+   switchport access vlan 640
+   switchport
+   ptp enable
+   ptp sync-message interval -3
+   ptp announce interval 0
+   ptp delay-req interval -3
+   ptp role master
+!
+interface Ethernet3/2/2
+   description HARM_CH5_RED
+   speed forced 10000full
+   switchport access vlan 640
+   switchport
+   ptp enable
+   ptp sync-message interval -3
+   ptp announce interval 0
+   ptp delay-req interval -3
+   ptp role master
+!
+interface Ethernet3/2/3
+   description HARM_CH6_RED
+   switchport access vlan 640
+   switchport
+   ptp enable
+   ptp sync-message interval -3
+   ptp announce interval 0
+   ptp delay-req interval -3
+   ptp role master
+!
+interface Ethernet3/2/4
+   description FUTURE USE
+   no switchport
+!
+interface Ethernet3/3/1
+   description DMV_4.2_RED
+   speed forced 40gfull
+   switchport access vlan 640
+   switchport
+   ptp enable
+   ptp sync-message interval -3
+   ptp announce interval 0
+   ptp delay-req interval -3
+   ptp role master
+!
+interface Ethernet3/3/2
+   description FUTURE USE
+   no switchport
+!
+interface Ethernet3/3/3
+   description FUTURE USE
+   no switchport
+!
+interface Ethernet3/3/4
+   description FUTURE USE
+   no switchport
+!
+interface Ethernet3/4/1
+   description DMV_4.3_RED
+   speed forced 40gfull
+   switchport access vlan 640
+   switchport
+   ptp enable
+   ptp sync-message interval -3
+   ptp announce interval 0
+   ptp delay-req interval -3
+   ptp role master
+!
+interface Ethernet3/4/2
+   description FUTURE USE
+   no switchport
+!
+interface Ethernet3/4/3
+   description FUTURE USE
+   no switchport
+!
+interface Ethernet3/4/4
+   description FUTURE USE
+   no switchport
+!
+interface Ethernet3/5/1
+   description AVP_4.1_RED
+   speed forced 40gfull
+   switchport access vlan 640
+   switchport
+   ptp enable
+   ptp sync-message interval -3
+   ptp announce interval 0
+   ptp delay-req interval -3
+   ptp role master
+!
+interface Ethernet3/5/2
+   description FUTURE USE
+   no switchport
+!
+interface Ethernet3/5/3
+   description FUTURE USE
+   no switchport
+!
+interface Ethernet3/5/4
+   description FUTURE USE
+   no switchport
+!
+interface Ethernet3/6/1
+   description AVP_4.2_RED
+   speed forced 40gfull
+   switchport access vlan 640
+   switchport
+   ptp enable
+   ptp sync-message interval -3
+   ptp announce interval 0
+   ptp delay-req interval -3
+   ptp role master
+!
+interface Ethernet3/6/2
+   description FUTURE USE
+   no switchport
+!
+interface Ethernet3/6/3
+   description FUTURE USE
+   no switchport
+!
+interface Ethernet3/6/4
+   description FUTURE USE
+   no switchport
+!
+interface Ethernet3/7/1
+   description AVP_7.1_RED
+   speed forced 40gfull
+   switchport access vlan 640
+   switchport
+   ptp enable
+   ptp sync-message interval -3
+   ptp announce interval 0
+   ptp delay-req interval -3
+   ptp role master
+!
+interface Ethernet3/7/2
+   description FUTURE USE
+   no switchport
+!
+interface Ethernet3/7/3
+   description FUTURE USE
+   no switchport
+!
+interface Ethernet3/7/4
+   description FUTURE USE
+   no switchport
+!
+interface Ethernet3/8/1
+   description AVP_7.2_RED
+   speed forced 40gfull
+   switchport access vlan 640
+   switchport
+   ptp enable
+   ptp sync-message interval -3
+   ptp announce interval 0
+   ptp delay-req interval -3
+   ptp role master
+!
+interface Ethernet3/8/2
+   description FUTURE USE
+   no switchport
+!
+interface Ethernet3/8/3
+   description FUTURE USE
+   no switchport
+!
+interface Ethernet3/8/4
+   description FUTURE USE
+   no switchport
+!
+interface Ethernet3/9/1
+   description AVP_4.3_RED_TEMP
+   shutdown
+   speed forced 40gfull
+   switchport access vlan 640
+   switchport
+   ptp enable
+   ptp sync-message interval -3
+   ptp announce interval 0
+   ptp delay-req interval -3
+   ptp role master
+!
+interface Ethernet3/9/2
+   description FUTURE USE
+   no switchport
+!
+interface Ethernet3/9/3
+   description FUTURE USE
+   no switchport
+!
+interface Ethernet3/9/4
+   description FUTURE USE
+   no switchport
+!
+interface Ethernet3/10/1
+   description FUTURE USE
+   shutdown
+   no switchport
+!
+interface Ethernet3/10/2
+   no switchport
+!
+interface Ethernet3/10/3
+   no switchport
+!
+interface Ethernet3/10/4
+   no switchport
+!
+interface Ethernet3/11/1
+   description FUTURE USE
+   shutdown
+   no switchport
+!
+interface Ethernet3/11/2
+   no switchport
+!
+interface Ethernet3/11/3
+   no switchport
+!
+interface Ethernet3/11/4
+   no switchport
+!
+interface Ethernet3/12/1
+   description FUTURE USE
+   shutdown
+   no switchport
+!
+interface Ethernet3/12/2
+   no switchport
+!
+interface Ethernet3/12/3
+   no switchport
+!
+interface Ethernet3/12/4
+   no switchport
+!
+interface Ethernet3/13
+   description UDX_5.1_RED
+   switchport access vlan 640
+   switchport
+   ptp enable
+   ptp sync-message interval -3
+   ptp announce interval 0
+   ptp delay-req interval -3
+   ptp role master
+!
+interface Ethernet3/14
+   description UDX_5.2_RED
+   switchport access vlan 640
+   switchport
+   ptp enable
+   ptp sync-message interval -3
+   ptp announce interval 0
+   ptp delay-req interval -3
+   ptp role master
+   spanning-tree portfast
+!
+interface Ethernet3/15
+   description UDX_5.3_RED
+   speed forced 40gfull
+   switchport access vlan 640
+   switchport
+   ptp enable
+   ptp sync-message interval -3
+   ptp announce interval 0
+   ptp delay-req interval -3
+   ptp role master
+   spanning-tree portfast
+!
+interface Ethernet3/16
+   description AVP_6.1_RED
+   switchport access vlan 640
+   switchport
+   ptp enable
+   ptp sync-message interval -3
+   ptp announce interval 0
+   ptp delay-req interval -3
+   ptp role master
+!
+interface Ethernet3/17
+   description AVP_6.2_RED
+   switchport access vlan 640
+   switchport
+   ptp enable
+   ptp sync-message interval -3
+   ptp announce interval 0
+   ptp delay-req interval -3
+   ptp role master
+!
+interface Ethernet3/18
+   description AVP_5.1_RED
+   speed forced 40gfull
+   switchport access vlan 640
+   switchport
+   ptp enable
+   ptp sync-message interval -3
+   ptp announce interval 0
+   ptp delay-req interval -3
+   ptp role master
+!
+interface Ethernet3/19
+   description AVP_5.2_RED
+   speed forced 40gfull
+   switchport access vlan 640
+   switchport
+   ptp enable
+   ptp sync-message interval -3
+   ptp announce interval 0
+   ptp delay-req interval -3
+   ptp role master
+!
+interface Ethernet3/20
+   description FUTURE USE
+   shutdown
+   speed forced 40gfull
+   no switchport
+!
+interface Ethernet3/21
+   description FUTURE USE
+   shutdown
+   speed forced 40gfull
+   no switchport
+!
+interface Ethernet3/22
+   description FUTURE USE
+   shutdown
+   speed forced 40gfull
+   no switchport
+!
+interface Ethernet3/23
+   description TO_R5_VRF_default
+   mtu 9170
+   speed forced 40gfull
+   no switchport
+   ip address 10.6.100.9/30
+   ip ospf dead-interval 3
+   ip ospf hello-interval 1
+   ip ospf network point-to-point
+   ip ospf authentication message-digest
+   ip ospf area 0.0.0.0
+   ip ospf message-digest-key 1 md5 7 20pDZxR6MJ3mAc8i7x7YFg==
+   pim ipv4 sparse-mode
+   ptp enable
+   ptp sync-message interval -3
+   ptp announce interval 0
+   ptp delay-req interval -3
+   ptp role master
+!
+interface Ethernet3/24
+   description TO_R7_VRF_default
+   mtu 9170
+   speed forced 40gfull
+   no switchport
+   ip address 10.6.100.13/30
+   ip ospf dead-interval 3
+   ip ospf hello-interval 1
+   ip ospf network point-to-point
+   ip ospf authentication message-digest
+   ip ospf area 0.0.0.0
+   ip ospf message-digest-key 1 md5 7 X1Q6bHrxB0zN4VFdqJ2L8g==
+   pim ipv4 sparse-mode
+   ptp enable
+   ptp sync-message interval -3
+   ptp announce interval 0
+   ptp delay-req interval -3
+!
+interface Ethernet3/25/1
+   description TO_R5_VRF_RED_LINK_1
+   mtu 9170
+   no switchport
+   vrf RED
+   ip address 10.6.101.25/30
+   ip ospf dead-interval 3
+   ip ospf hello-interval 1
+   ip ospf network point-to-point
+   ip ospf authentication message-digest
+   ip ospf area 0.0.0.0
+   ip ospf message-digest-key 1 md5 7 LuSklB8bw+A5HDONGjOQoQ==
+   pim ipv4 sparse-mode
+   ptp enable
+   ptp sync-message interval -3
+   ptp announce interval 0
+   ptp delay-req interval -3
+!
+interface Ethernet3/25/2
+   no switchport
+!
+interface Ethernet3/25/3
+   no switchport
+!
+interface Ethernet3/25/4
+   no switchport
+!
+interface Ethernet3/26/1
+   description TO_R7_VRF_RED_LINK_1
+   mtu 9170
+   speed forced 100gfull
+   no switchport
+   vrf RED
+   ip address 10.6.101.5/30
+   ip ospf dead-interval 3
+   ip ospf hello-interval 1
+   ip ospf network point-to-point
+   ip ospf authentication message-digest
+   ip ospf area 0.0.0.0
+   ip ospf message-digest-key 1 md5 7 vxq7dF4wI7kslG6vEUVr/Q==
+   pim ipv4 sparse-mode
+   ptp enable
+   ptp sync-message interval -3
+   ptp announce interval 0
+   ptp delay-req interval -3
+   ptp role master
+!
+interface Ethernet3/26/2
+   description VIZRT-IP-4.2_RED
+   speed forced 25gfull
+   switchport access vlan 640
+   switchport
+   ptp enable
+   ptp sync-message interval -3
+   ptp announce interval 0
+   ptp delay-req interval -3
+   ptp role master
+!
+interface Ethernet3/26/3
+   description VIZRT-IP-4.3_RED
+   speed forced 25gfull
+   switchport access vlan 640
+   switchport
+   ptp enable
+   ptp sync-message interval -3
+   ptp announce interval 0
+   ptp delay-req interval -3
+   ptp role master
+!
+interface Ethernet3/26/4
+   description VIZRT-IP-4.4_RED
+   speed forced 25gfull
+   switchport access vlan 640
+   switchport
+   ptp enable
+   ptp sync-message interval -3
+   ptp announce interval 0
+   ptp delay-req interval -3
+   ptp role master
+!
+interface Ethernet3/27/1
+   description TO_R7_VRF_RED_LINK_3
+   mtu 9170
+   speed forced 100gfull
+   no switchport
+   vrf RED
+   ip address 10.6.101.33/30
+   ip ospf dead-interval 3
+   ip ospf hello-interval 1
+   ip ospf network point-to-point
+   ip ospf authentication message-digest
+   ip ospf area 0.0.0.0
+   ip ospf message-digest-key 1 md5 7 vxq7dF4wI7kslG6vEUVr/Q==
+   pim ipv4 sparse-mode
+   ptp enable
+   ptp sync-message interval -3
+   ptp announce interval 0
+   ptp delay-req interval -3
+!
+interface Ethernet3/27/2
+   no switchport
+!
+interface Ethernet3/27/3
+   no switchport
+!
+interface Ethernet3/27/4
+   no switchport
+!
+interface Ethernet3/28/1
+   description STREAMLABS-TEST-1
+   shutdown
+   speed forced 40gfull
+   switchport access vlan 640
+   switchport
+   ptp enable
+   ptp sync-message interval -3
+   ptp announce interval 0
+   ptp delay-req interval -3
+   ptp role master
+!
+interface Ethernet3/28/2
+   description FUTURE USE
+   no switchport
+!
+interface Ethernet3/28/3
+   description FUTURE USE
+   no switchport
+!
+interface Ethernet3/28/4
+   description FUTURE USE
+   no switchport
+!
+interface Ethernet3/29/1
+   description STREAMLABS-TEST-2
+   shutdown
+   speed forced 40gfull
+   no switchport
+   ptp enable
+   ptp sync-message interval -3
+   ptp announce interval 0
+   ptp delay-req interval -3
+   ptp role master
+!
+interface Ethernet3/29/2
+   description FUTURE USE
+   no switchport
+!
+interface Ethernet3/29/3
+   description FUTURE USE
+   no switchport
+!
+interface Ethernet3/29/4
+   description FUTURE USE
+   no switchport
+!
+interface Ethernet3/30/1
+   description EMBRI_M5_WOH
+   speed forced 10000full
+   no switchport
+   vrf RED
+   ip address 10.6.70.1/30
+   pim ipv4 sparse-mode
+   ptp enable
+   ptp sync-message interval -3
+   ptp announce interval 0
+   ptp delay-req interval -3
+   ptp role master
+!
+interface Ethernet3/30/2
+   description FUTURE USE
+   shutdown
+   speed forced 10000full
+   switchport access vlan 640
+   no switchport
+   ptp enable
+   ptp sync-message interval -3
+   ptp announce interval 0
+   ptp delay-req interval -3
+   ptp role master
+!
+interface Ethernet3/30/3
+   description FUTURE USE
+   shutdown
+   speed forced 10000full
+   switchport access vlan 640
+   no switchport
+   ptp enable
+   ptp sync-message interval -3
+   ptp announce interval 0
+   ptp delay-req interval -3
+   ptp role master
+!
+interface Ethernet3/30/4
+   description FUTURE USE
+   shutdown
+   speed forced 10000full
+   switchport access vlan 640
+   no switchport
+   ptp enable
+   ptp sync-message interval -3
+   ptp announce interval 0
+   ptp delay-req interval -3
+   ptp role master
+!
+interface Ethernet3/31/1
+   description STREAMLABS MV 9_RED
+   speed forced 100gfull
+   switchport access vlan 640
+   switchport
+   ptp enable
+   ptp sync-message interval -3
+   ptp announce interval 0
+   ptp delay-req interval -3
+   ptp role master
+!
+interface Ethernet3/31/2
+   description FUTURE USE
+   shutdown
+   no switchport
+!
+interface Ethernet3/31/3
+   description FUTURE USE
+   shutdown
+   no switchport
+!
+interface Ethernet3/31/4
+   description FUTURE USE
+   shutdown
+   no switchport
+!
+interface Ethernet3/32/1
+   description FUTURE USE
+   no switchport
+!
+interface Ethernet3/32/2
+   description FUTURE USE
+   no switchport
+!
+interface Ethernet3/32/3
+   description FUTURE USE
+   no switchport
+!
+interface Ethernet3/32/4
+   description FUTURE USE
+   no switchport
+!
+interface Ethernet3/33/1
+   description AVP TEST
+   speed forced 40gfull
+   switchport access vlan 640
+   switchport
+   ptp enable
+   ptp sync-message interval -3
+   ptp announce interval 0
+   ptp delay-req interval -3
+   ptp role master
+!
+interface Ethernet3/33/2
+   description FUTURE USE
+   no switchport
+!
+interface Ethernet3/33/3
+   description FUTURE USE
+   no switchport
+!
+interface Ethernet3/33/4
+   description FUTURE USE
+   no switchport
+!
+interface Ethernet3/34/1
+   description FUTURE USE
+   no switchport
+   vrf RED
+!
+interface Ethernet3/34/2
+   description FUTURE USE
+   no switchport
+!
+interface Ethernet3/34/3
+   description FUTURE USE
+   no switchport
+!
+interface Ethernet3/34/4
+   description FUTURE USE
+   no switchport
+!
+interface Ethernet3/35/1
+   description FUTURE USE
+   no switchport
+!
+interface Ethernet3/35/2
+   no switchport
+!
+interface Ethernet3/35/3
+   no switchport
+!
+interface Ethernet3/35/4
+   no switchport
+!
+interface Ethernet3/36/1
+   description FUTURE USE
+   no switchport
+!
+interface Ethernet3/36/2
+   description FUTURE USE
+   switchport access vlan 640
+   switchport
+   ptp enable
+   ptp sync-message interval -3
+   ptp announce interval 0
+   ptp delay-req interval -3
+   ptp role master
+!
+interface Ethernet3/36/3
+   description FUTURE USE
+   no switchport
+!
+interface Ethernet3/36/4
+   description FUTURE USE
+   no switchport
+!
+interface Ethernet4/1/1
+   description HARM_CH4_RED
+   speed forced 10000full
+   switchport access vlan 640
+   switchport
+   ptp enable
+   ptp sync-message interval -3
+   ptp announce interval 0
+   ptp delay-req interval -3
+   ptp role master
+!
+interface Ethernet4/1/2
+   description HARM_CH5_RED
+   speed forced 10000full
+   switchport access vlan 640
+   switchport
+   ptp enable
+   ptp sync-message interval -3
+   ptp announce interval 0
+   ptp delay-req interval -3
+   ptp role master
+!
+interface Ethernet4/1/3
+   description HARM_CH6_RED
+   speed forced 10000full
+   switchport access vlan 640
+   switchport
+   ptp enable
+   ptp sync-message interval -3
+   ptp announce interval 0
+   ptp delay-req interval -3
+   ptp role master
+!
+interface Ethernet4/1/4
+   description FUTURE USE
+   speed forced 10000full
+   no switchport
+!
+interface Ethernet4/2/1
+   description EDGE_4.1_RED_L1
+   speed forced 100gfull
+   switchport access vlan 640
+   switchport
+   ptp enable
+   ptp sync-message interval -3
+   ptp announce interval 0
+   ptp delay-req interval -3
+   ptp role master
+!
+interface Ethernet4/2/2
+   no switchport
+!
+interface Ethernet4/2/3
+   no switchport
+!
+interface Ethernet4/2/4
+   no switchport
+!
+interface Ethernet4/3/1
+   description EDGE_4.2_RED_L1
+   speed forced 100gfull
+   error-correction encoding reed-solomon
+   switchport access vlan 640
+   switchport
+   ptp enable
+   ptp sync-message interval -3
+   ptp announce interval 0
+   ptp delay-req interval -3
+   ptp role master
+!
+interface Ethernet4/3/2
+   no switchport
+!
+interface Ethernet4/3/3
+   no switchport
+!
+interface Ethernet4/3/4
+   no switchport
+!
+interface Ethernet4/4/1
+   description EDGE_4.3_RED_L1
+   speed forced 25gfull
+   error-correction encoding reed-solomon
+   switchport access vlan 640
+   switchport
+   ptp enable
+   ptp sync-message interval -3
+   ptp announce interval 0
+   ptp delay-req interval -3
+   ptp role master
+!
+interface Ethernet4/4/2
+   description EDGE_4.3_RED_L2
+   speed forced 25gfull
+   error-correction encoding reed-solomon
+   switchport access vlan 640
+   switchport
+   ptp enable
+   ptp sync-message interval -3
+   ptp announce interval 0
+   ptp delay-req interval -3
+   ptp role master
+!
+interface Ethernet4/4/3
+   description FUTURE USE
+   shutdown
+   no switchport
+!
+interface Ethernet4/4/4
+   description FUTURE USE
+   shutdown
+   no switchport
+!
+interface Ethernet4/5/1
+   description EDGE_6.1_RED_L1
+   speed forced 100gfull
+   error-correction encoding reed-solomon
+   switchport access vlan 640
+   switchport
+   ptp enable
+   ptp sync-message interval -3
+   ptp announce interval 0
+   ptp delay-req interval -3
+   ptp role master
+!
+interface Ethernet4/5/2
+   no switchport
+!
+interface Ethernet4/5/3
+   no switchport
+!
+interface Ethernet4/5/4
+   no switchport
+!
+interface Ethernet4/6/1
+   description EDGE_6.2_RED_L1
+   speed forced 100gfull
+   error-correction encoding reed-solomon
+   switchport access vlan 640
+   switchport
+   ptp enable
+   ptp sync-message interval -3
+   ptp announce interval 0
+   ptp delay-req interval -3
+   ptp role master
+!
+interface Ethernet4/6/2
+   no switchport
+!
+interface Ethernet4/6/3
+   no switchport
+!
+interface Ethernet4/6/4
+   no switchport
+!
+interface Ethernet4/7/1
+   description EDGE_6.3_RED_L1
+   speed forced 100gfull
+   error-correction encoding reed-solomon
+   switchport access vlan 640
+   switchport
+   ptp enable
+   ptp sync-message interval -3
+   ptp announce interval 0
+   ptp delay-req interval -3
+   ptp role master
+!
+interface Ethernet4/7/2
+   no switchport
+!
+interface Ethernet4/7/3
+   no switchport
+!
+interface Ethernet4/7/4
+   no switchport
+!
+interface Ethernet4/8/1
+   description EDGE_8.1_RED_L1
+   shutdown
+   speed forced 25gfull
+   error-correction encoding reed-solomon
+   no switchport
+   transceiver media override 100gbase-lr4
+!
+interface Ethernet4/8/2
+   description EDGE_8.1_RED_L2
+   shutdown
+   speed forced 25gfull
+   error-correction encoding reed-solomon
+   no switchport
+!
+interface Ethernet4/8/3
+   description EDGE_8.1_RED_L3
+   shutdown
+   speed forced 25gfull
+   error-correction encoding reed-solomon
+   switchport access vlan 640
+   switchport
+   ptp enable
+   ptp sync-message interval -3
+   ptp announce interval 0
+   ptp delay-req interval -3
+   ptp role master
+!
+interface Ethernet4/8/4
+   description FUTURE USE
+   shutdown
+   no switchport
+!
+interface Ethernet4/9/1
+   description EDGE_9.1_RED_L1
+   speed forced 100gfull
+   error-correction encoding reed-solomon
+   switchport access vlan 640
+   switchport
+   ptp enable
+   ptp sync-message interval -3
+   ptp announce interval 0
+   ptp delay-req interval -3
+   ptp role master
+!
+interface Ethernet4/9/2
+   description EDGE_9.1_RED_L2
+   speed forced 25gfull
+   error-correction encoding reed-solomon
+   switchport access vlan 640
+   switchport
+   ptp enable
+   ptp sync-message interval -3
+   ptp announce interval 0
+   ptp delay-req interval -3
+   ptp role master
+!
+interface Ethernet4/9/3
+   description FUTURE USE
+   shutdown
+   no switchport
+!
+interface Ethernet4/9/4
+   description FUTURE USE
+   shutdown
+   no switchport
+!
+interface Ethernet4/10/1
+   description EDGE_10.1_RED_L1
+   speed forced 100gfull
+   error-correction encoding reed-solomon
+   switchport access vlan 640
+   switchport
+   ptp enable
+   ptp sync-message interval -3
+   ptp announce interval 0
+   ptp delay-req interval -3
+   ptp role master
+!
+interface Ethernet4/10/2
+   description EDGE_10.1_RED_L2
+   speed forced 25gfull
+   error-correction encoding reed-solomon
+   switchport access vlan 640
+   switchport
+   ptp enable
+   ptp sync-message interval -3
+   ptp announce interval 0
+   ptp delay-req interval -3
+   ptp role master
+!
+interface Ethernet4/10/3
+   description FUTURE USE
+   shutdown
+   no switchport
+!
+interface Ethernet4/10/4
+   description FUTURE USE
+   shutdown
+   no switchport
+!
+interface Ethernet4/11/1
+   description IPVU_6.1_RED_L1
+   speed forced 25gfull
+   error-correction encoding fire-code
+   switchport access vlan 640
+   switchport
+   ptp enable
+   ptp sync-message interval -3
+   ptp announce interval 0
+   ptp delay-req interval -3
+   ptp role master
+!
+interface Ethernet4/11/2
+   description IPVU_6.2_RED_L1
+   speed forced 25gfull
+   error-correction encoding fire-code
+   switchport access vlan 640
+   switchport
+   ptp enable
+   ptp sync-message interval -3
+   ptp announce interval 0
+   ptp delay-req interval -3
+   ptp role master
+!
+interface Ethernet4/11/3
+   description FUTURE USE
+   shutdown
+   speed forced 25gfull
+   error-correction encoding fire-code
+   switchport access vlan 640
+   switchport
+   ptp enable
+   ptp sync-message interval -3
+   ptp announce interval 0
+   ptp delay-req interval -3
+   ptp role master
+!
+interface Ethernet4/11/4
+   description FUTURE USE
+   shutdown
+   speed forced 25gfull
+   error-correction encoding fire-code
+   switchport access vlan 640
+   switchport
+   ptp enable
+   ptp sync-message interval -3
+   ptp announce interval 0
+   ptp delay-req interval -3
+   ptp role master
+!
+interface Ethernet4/12/1
+   description STREAMLABS MV 1_RED
+   speed forced 100gfull
+   switchport access vlan 640
+   switchport
+   ptp enable
+   ptp sync-message interval -3
+   ptp announce interval 0
+   ptp delay-req interval -3
+   ptp role master
+!
+interface Ethernet4/12/2
+   no switchport
+!
+interface Ethernet4/12/3
+   no switchport
+!
+interface Ethernet4/12/4
+   no switchport
+!
+interface Ethernet4/13/1
+   description STREAMLABS MV 2_RED
+   speed forced 100gfull
+   switchport access vlan 640
+   switchport
+   ptp enable
+   ptp sync-message interval -3
+   ptp announce interval 0
+   ptp delay-req interval -3
+   ptp role master
+!
+interface Ethernet4/13/2
+   no switchport
+!
+interface Ethernet4/13/3
+   no switchport
+!
+interface Ethernet4/13/4
+   no switchport
+!
+interface Ethernet4/14/1
+   description STREAMLABS MV 3_RED
+   speed forced 100gfull
+   switchport access vlan 640
+   switchport
+   ptp enable
+   ptp sync-message interval -3
+   ptp announce interval 0
+   ptp delay-req interval -3
+   ptp role master
+!
+interface Ethernet4/14/2
+   no switchport
+!
+interface Ethernet4/14/3
+   no switchport
+!
+interface Ethernet4/14/4
+   no switchport
+!
+interface Ethernet4/15/1
+   description STREAMLABS MV 4_RED
+   speed forced 100gfull
+   switchport access vlan 640
+   switchport
+   ptp enable
+   ptp sync-message interval -3
+   ptp announce interval 0
+   ptp delay-req interval -3
+   ptp role master
+!
+interface Ethernet4/15/2
+   no switchport
+!
+interface Ethernet4/15/3
+   no switchport
+!
+interface Ethernet4/15/4
+   no switchport
+!
+interface Ethernet4/16/1
+   description STREAMLABS MV 5_RED
+   speed forced 100gfull
+   switchport access vlan 640
+   switchport
+   ptp enable
+   ptp sync-message interval -3
+   ptp announce interval 0
+   ptp delay-req interval -3
+   ptp role master
+!
+interface Ethernet4/16/2
+   no switchport
+!
+interface Ethernet4/16/3
+   no switchport
+!
+interface Ethernet4/16/4
+   no switchport
+!
+interface Ethernet4/17/1
+   description STREAMLABS MV 6_RED
+   speed forced 100gfull
+   switchport access vlan 640
+   switchport
+   ptp enable
+   ptp sync-message interval -3
+   ptp announce interval 0
+   ptp delay-req interval -3
+   ptp role master
+!
+interface Ethernet4/17/2
+   no switchport
+!
+interface Ethernet4/17/3
+   no switchport
+!
+interface Ethernet4/17/4
+   no switchport
+!
+interface Ethernet4/18/1
+   description STREAMLABS MV 7_RED
+   speed forced 100gfull
+   switchport access vlan 640
+   switchport
+   ptp enable
+   ptp sync-message interval -3
+   ptp announce interval 0
+   ptp delay-req interval -3
+   ptp role master
+!
+interface Ethernet4/18/2
+   no switchport
+!
+interface Ethernet4/18/3
+   no switchport
+!
+interface Ethernet4/18/4
+   no switchport
+!
+interface Ethernet4/19/1
+   description STREAMLABS MV 8_RED
+   speed forced 100gfull
+   switchport access vlan 640
+   switchport
+   ptp enable
+   ptp sync-message interval -3
+   ptp announce interval 0
+   ptp delay-req interval -3
+   ptp role master
+!
+interface Ethernet4/19/2
+   no switchport
+!
+interface Ethernet4/19/3
+   no switchport
+!
+interface Ethernet4/19/4
+   no switchport
+!
+interface Ethernet4/20/1
+   description IPVU_7.1_RED
+   speed forced 25gfull
+   error-correction encoding fire-code
+   switchport access vlan 640
+   switchport
+   ptp enable
+   ptp sync-message interval -3
+   ptp announce interval 0
+   ptp delay-req interval -3
+   ptp role master
+!
+interface Ethernet4/20/2
+   description IPVU_7.4_RED
+   shutdown
+   speed forced 25gfull
+   error-correction encoding fire-code
+   switchport access vlan 640
+   switchport
+   ptp enable
+   ptp sync-message interval -3
+   ptp announce interval 0
+   ptp delay-req interval -3
+   ptp role master
+!
+interface Ethernet4/20/3
+   description IPVU_7.3_RED
+   speed forced 25gfull
+   error-correction encoding fire-code
+   switchport access vlan 640
+   switchport
+   ptp enable
+   ptp sync-message interval -3
+   ptp announce interval 0
+   ptp delay-req interval -3
+   ptp role master
+!
+interface Ethernet4/20/4
+   description IPVU_7.2_RED
+   speed forced 25gfull
+   error-correction encoding fire-code
+   switchport access vlan 640
+   switchport
+   ptp enable
+   ptp sync-message interval -3
+   ptp announce interval 0
+   ptp delay-req interval -3
+   ptp role master
+!
+interface Ethernet4/21/1
+   description TO_R4_VRF_default
+   no switchport
+   ip address 10.6.100.5/30
+   ip ospf dead-interval 3
+   ip ospf hello-interval 1
+   ip ospf network point-to-point
+   ip ospf authentication message-digest
+   ip ospf area 0.0.0.0
+   ip ospf message-digest-key 1 md5 7 vjeVmgnhDg37RMhdSd+flA==
+   pim ipv4 sparse-mode
+   ptp enable
+   ptp sync-message interval -3
+   ptp announce interval 0
+   ptp delay-req interval -3
+!
+interface Ethernet4/21/2
+   no switchport
+!
+interface Ethernet4/21/3
+   no switchport
+!
+interface Ethernet4/21/4
+   no switchport
+!
+interface Ethernet4/22/1
+   description TO_R3_VRF_default
+   mtu 9170
+   no switchport
+   ip address 10.6.100.1/30
+   ip ospf dead-interval 3
+   ip ospf hello-interval 1
+   ip ospf network point-to-point
+   ip ospf authentication message-digest
+   ip ospf area 0.0.0.0
+   ip ospf message-digest-key 1 md5 7 zl/k4GMkbiEzu9QI73OBkw==
+   pim ipv4 sparse-mode
+   ptp enable
+   ptp sync-message interval -3
+   ptp announce interval 0
+   ptp delay-req interval -3
+!
+interface Ethernet4/22/2
+   description VIZRT_2.1_RED
+   switchport access vlan 640
+   switchport
+   ptp enable
+   ptp sync-message interval -3
+   ptp announce interval 0
+   ptp delay-req interval -3
+   ptp role master
+!
+interface Ethernet4/22/3
+   description VIZRT_2.2_RED
+   switchport access vlan 640
+   switchport
+   ptp enable
+   ptp sync-message interval -3
+   ptp announce interval 0
+   ptp delay-req interval -3
+   ptp role master
+!
+interface Ethernet4/22/4
+   no switchport
+!
+interface Ethernet4/23/1
+   description HARM_CH1_RED
+   speed forced 10000full
+   switchport access vlan 640
+   switchport
+   ptp enable
+   ptp sync-message interval -3
+   ptp announce interval 0
+   ptp delay-req interval -3
+   ptp role master
+!
+interface Ethernet4/23/2
+   description HARM_CH2_RED
+   speed forced 10000full
+   switchport access vlan 640
+   switchport
+   ptp enable
+   ptp sync-message interval -3
+   ptp announce interval 0
+   ptp delay-req interval -3
+   ptp role master
+!
+interface Ethernet4/23/3
+   description HARM_CH3_RED
+   speed forced 10000full
+   switchport access vlan 640
+   switchport
+   ptp enable
+   ptp sync-message interval -3
+   ptp announce interval 0
+   ptp delay-req interval -3
+   ptp role master
+!
+interface Ethernet4/23/4
+   description FUTURE USE
+   shutdown
+   speed forced 10000full
+   no switchport
+!
+interface Ethernet4/24/1
+   description SMART_SCOPE_RED
+   speed forced 100gfull
+   switchport access vlan 640
+   switchport
+   ptp enable
+   ptp sync-message interval -3
+   ptp announce interval 0
+   ptp delay-req interval -3
+   ptp role master
+!
+interface Ethernet4/24/2
+   no switchport
+!
+interface Ethernet4/24/3
+   no switchport
+!
+interface Ethernet4/24/4
+   no switchport
+!
+interface Ethernet4/25/1
+   description TO_R5_VRF_RED_LINK_2
+   mtu 9170
+   speed forced 100gfull
+   no switchport
+   vrf RED
+   ip address 10.6.101.30/30
+   ip ospf dead-interval 3
+   ip ospf hello-interval 1
+   ip ospf network point-to-point
+   ip ospf authentication message-digest
+   ip ospf area 0.0.0.0
+   ip ospf message-digest-key 1 md5 7 so2xJfk6WiDDfxg6aoAgaA==
+   pim ipv4 sparse-mode
+   ptp enable
+   ptp sync-message interval -3
+   ptp announce interval 0
+   ptp delay-req interval -3
+!
+interface Ethernet4/25/2
+   no switchport
+!
+interface Ethernet4/25/3
+   no switchport
+!
+interface Ethernet4/25/4
+   no switchport
+!
+interface Ethernet4/26/1
+   description TO_R7_VRF_RED_LINK_2
+   mtu 9170
+   speed forced 100gfull
+   no switchport
+   vrf RED
+   ip address 10.6.101.9/30
+   ip ospf dead-interval 3
+   ip ospf hello-interval 1
+   ip ospf network point-to-point
+   ip ospf authentication message-digest
+   ip ospf area 0.0.0.0
+   ip ospf message-digest-key 1 md5 7 1n0Pjyvwq+YSnKAXGQVkyw==
+   pim ipv4 sparse-mode
+   ptp enable
+   ptp sync-message interval -3
+   ptp announce interval 0
+   ptp delay-req interval -3
+!
+interface Ethernet4/26/2
+   no switchport
+!
+interface Ethernet4/26/3
+   no switchport
+!
+interface Ethernet4/26/4
+   no switchport
+!
+interface Ethernet4/27/1
+   description TO_R7_VRF_RED_LINK_4
+   mtu 9170
+   speed forced 100gfull
+   no switchport
+   vrf RED
+   ip address 10.6.101.37/30
+   ip ospf dead-interval 3
+   ip ospf hello-interval 1
+   ip ospf network point-to-point
+   ip ospf authentication message-digest
+   ip ospf area 0.0.0.0
+   ip ospf message-digest-key 1 md5 7 1n0Pjyvwq+YSnKAXGQVkyw==
+   pim ipv4 sparse-mode
+   ptp enable
+   ptp sync-message interval -3
+   ptp announce interval 0
+   ptp delay-req interval -3
+!
+interface Ethernet4/27/2
+   no switchport
+!
+interface Ethernet4/27/3
+   no switchport
+!
+interface Ethernet4/27/4
+   no switchport
+!
+interface Ethernet4/28/1
+   description EDGE_8.1_RED_L1_NEW
+   speed forced 100gfull
+   error-correction encoding reed-solomon
+   switchport access vlan 640
+   switchport
+   ptp enable
+   ptp sync-message interval -3
+   ptp announce interval 0
+   ptp delay-req interval -3
+   ptp role master
+!
+interface Ethernet4/28/2
+   description EDGE_8.1_RED_L2_NEW
+   mtu 8190
+   speed forced 25gfull
+   error-correction encoding reed-solomon
+   no switchport
+   vrf RED
+   ip address 10.6.42.5/30
+   pim ipv4 sparse-mode
+   ptp enable
+   ptp sync-message interval -3
+   ptp announce interval 0
+   ptp delay-req interval -3
+   ptp role master
+!
+interface Ethernet4/28/3
+   no switchport
+!
+interface Ethernet4/28/4
+   no switchport
+!
+interface Ethernet4/29/1
+   description STREAMLABS MV 9_RED
+   speed forced 100gfull
+   switchport access vlan 640
+   switchport
+   ptp enable
+   ptp sync-message interval -3
+   ptp announce interval 0
+   ptp delay-req interval -3
+   ptp role master
+!
+interface Ethernet4/29/2
+   no switchport
+!
+interface Ethernet4/29/3
+   no switchport
+!
+interface Ethernet4/29/4
+   no switchport
+!
+interface Ethernet4/30/1
+   description EDGE_4.3_RED_L1 temp
+   speed forced 100gfull
+   error-correction encoding reed-solomon
+   switchport access vlan 640
+   switchport
+   ptp enable
+   ptp sync-message interval -3
+   ptp announce interval 0
+   ptp delay-req interval -3
+   ptp role master
+!
+interface Ethernet4/30/2
+   no switchport
+!
+interface Ethernet4/30/3
+   no switchport
+!
+interface Ethernet4/30/4
+   no switchport
+!
+interface Ethernet4/31/1
+   no switchport
+!
+interface Ethernet4/31/2
+   no switchport
+!
+interface Ethernet4/31/3
+   no switchport
+!
+interface Ethernet4/31/4
+   no switchport
+!
+interface Ethernet4/32/1
+   no switchport
+!
+interface Ethernet4/32/2
+   no switchport
+!
+interface Ethernet4/32/3
+   no switchport
+!
+interface Ethernet4/32/4
+   no switchport
+!
+interface Ethernet4/33/1
+   description TO_R12_VRF_RED_LINK
+   mtu 9170
+   speed forced 100gfull
+   switchport trunk allowed vlan 110,120
+   switchport mode trunk
+   switchport
+   pim ipv4 sparse-mode
+   ptp enable
+   ptp sync-message interval -3
+   ptp announce interval 0
+   ptp delay-req interval -3
+   ptp role master
+!
+interface Ethernet4/33/2
+   no switchport
+!
+interface Ethernet4/33/3
+   no switchport
+!
+interface Ethernet4/33/4
+   no switchport
+!
+interface Ethernet4/34/1
+   description TO_R11_TRUNK
+   mtu 9170
+   speed forced 10000full
+   switchport trunk allowed vlan 111,121
+   switchport mode trunk
+   switchport
+   pim ipv4 sparse-mode
+   ptp enable
+   ptp sync-message interval -3
+   ptp announce interval 0
+   ptp delay-req interval -3
+   ptp role master
+!
+interface Ethernet4/34/2
+   no switchport
+!
+interface Ethernet4/34/3
+   no switchport
+!
+interface Ethernet4/34/4
+   no switchport
+!
+interface Ethernet4/35/1
+   no switchport
+!
+interface Ethernet4/35/2
+   no switchport
+!
+interface Ethernet4/35/3
+   no switchport
+!
+interface Ethernet4/35/4
+   no switchport
+!
+interface Ethernet4/36/1
+   description TO_R3_VRF_RED_LINK_1
+   mtu 9170
+   no switchport
+   vrf RED
+   ip address 10.6.101.1/30
+   ip ospf dead-interval 3
+   ip ospf hello-interval 1
+   ip ospf network point-to-point
+   ip ospf authentication message-digest
+   ip ospf area 0.0.0.0
+   ip ospf message-digest-key 1 md5 7 1n0Pjyvwq+YSnKAXGQVkyw==
+   pim ipv4 sparse-mode
+   ptp enable
+   ptp sync-message interval -3
+   ptp announce interval 0
+   ptp delay-req interval -3
+!
+interface Ethernet4/36/2
+   description TO_R3_VRF_RED_LINK_2
+   mtu 9170
+   no switchport
+   vrf RED
+   ip address 10.6.101.13/30
+   ip ospf dead-interval 3
+   ip ospf hello-interval 1
+   ip ospf network point-to-point
+   ip ospf authentication message-digest
+   ip ospf area 0.0.0.0
+   ip ospf message-digest-key 1 md5 7 dMDDRaZaOIlBXFuQFqwd3Q==
+   pim ipv4 sparse-mode
+!
+interface Ethernet4/36/3
+   description VIZRT_2.3_RED
+   switchport access vlan 640
+   switchport
+   ptp enable
+   ptp sync-message interval -3
+   ptp announce interval 0
+   ptp delay-req interval -3
+   ptp role master
+!
+interface Ethernet4/36/4
+   description VIZRT_2.4_RED
+   switchport access vlan 640
+   switchport
+   ptp enable
+   ptp sync-message interval -3
+   ptp announce interval 0
+   ptp delay-req interval -3
+   ptp role master
+!
+interface Ethernet5/1/1
+   no switchport
+!
+interface Ethernet5/1/2
+   no switchport
+!
+interface Ethernet5/1/3
+   no switchport
+!
+interface Ethernet5/1/4
+   no switchport
+!
+interface Ethernet5/2/1
+   no switchport
+!
+interface Ethernet5/2/2
+   no switchport
+!
+interface Ethernet5/2/3
+   no switchport
+!
+interface Ethernet5/2/4
+   no switchport
+!
+interface Ethernet5/3/1
+   no switchport
+!
+interface Ethernet5/3/2
+   no switchport
+!
+interface Ethernet5/3/3
+   no switchport
+!
+interface Ethernet5/3/4
+   no switchport
+!
+interface Ethernet5/4/1
+   no switchport
+!
+interface Ethernet5/4/2
+   no switchport
+!
+interface Ethernet5/4/3
+   no switchport
+!
+interface Ethernet5/4/4
+   no switchport
+!
+interface Ethernet5/5/1
+   no switchport
+!
+interface Ethernet5/5/2
+   no switchport
+!
+interface Ethernet5/5/3
+   no switchport
+!
+interface Ethernet5/5/4
+   no switchport
+!
+interface Ethernet5/6/1
+   no switchport
+!
+interface Ethernet5/6/2
+   no switchport
+!
+interface Ethernet5/6/3
+   no switchport
+!
+interface Ethernet5/6/4
+   no switchport
+!
+interface Ethernet5/7/1
+   no switchport
+!
+interface Ethernet5/7/2
+   no switchport
+!
+interface Ethernet5/7/3
+   no switchport
+!
+interface Ethernet5/7/4
+   no switchport
+!
+interface Ethernet5/8/1
+   no switchport
+!
+interface Ethernet5/8/2
+   no switchport
+!
+interface Ethernet5/8/3
+   no switchport
+!
+interface Ethernet5/8/4
+   no switchport
+!
+interface Ethernet5/9/1
+   no switchport
+!
+interface Ethernet5/9/2
+   no switchport
+!
+interface Ethernet5/9/3
+   no switchport
+!
+interface Ethernet5/9/4
+   no switchport
+!
+interface Ethernet5/10/1
+   no switchport
+!
+interface Ethernet5/10/2
+   no switchport
+!
+interface Ethernet5/10/3
+   no switchport
+!
+interface Ethernet5/10/4
+   no switchport
+!
+interface Ethernet5/11/1
+   no switchport
+!
+interface Ethernet5/11/2
+   no switchport
+!
+interface Ethernet5/11/3
+   no switchport
+!
+interface Ethernet5/11/4
+   no switchport
+!
+interface Ethernet5/12/1
+   no switchport
+!
+interface Ethernet5/12/2
+   no switchport
+!
+interface Ethernet5/12/3
+   no switchport
+!
+interface Ethernet5/12/4
+   no switchport
+!
+interface Ethernet5/13/1
+   no switchport
+!
+interface Ethernet5/13/2
+   no switchport
+!
+interface Ethernet5/13/3
+   no switchport
+!
+interface Ethernet5/13/4
+   no switchport
+!
+interface Ethernet5/14/1
+   no switchport
+!
+interface Ethernet5/14/2
+   no switchport
+!
+interface Ethernet5/14/3
+   no switchport
+!
+interface Ethernet5/14/4
+   no switchport
+!
+interface Ethernet5/15/1
+   no switchport
+!
+interface Ethernet5/15/2
+   no switchport
+!
+interface Ethernet5/15/3
+   no switchport
+!
+interface Ethernet5/15/4
+   no switchport
+!
+interface Ethernet5/16/1
+   no switchport
+!
+interface Ethernet5/16/2
+   no switchport
+!
+interface Ethernet5/16/3
+   no switchport
+!
+interface Ethernet5/16/4
+   no switchport
+!
+interface Ethernet5/17/1
+   no switchport
+!
+interface Ethernet5/17/2
+   no switchport
+!
+interface Ethernet5/17/3
+   no switchport
+!
+interface Ethernet5/17/4
+   no switchport
+!
+interface Ethernet5/18/1
+   no switchport
+!
+interface Ethernet5/18/2
+   no switchport
+!
+interface Ethernet5/18/3
+   no switchport
+!
+interface Ethernet5/18/4
+   no switchport
+!
+interface Ethernet5/19/1
+   no switchport
+!
+interface Ethernet5/19/2
+   no switchport
+!
+interface Ethernet5/19/3
+   no switchport
+!
+interface Ethernet5/19/4
+   no switchport
+!
+interface Ethernet5/20/1
+   no switchport
+!
+interface Ethernet5/20/2
+   no switchport
+!
+interface Ethernet5/20/3
+   no switchport
+!
+interface Ethernet5/20/4
+   no switchport
+!
+interface Ethernet5/21/1
+   no switchport
+!
+interface Ethernet5/21/2
+   no switchport
+!
+interface Ethernet5/21/3
+   no switchport
+!
+interface Ethernet5/21/4
+   no switchport
+!
+interface Ethernet5/22/1
+   no switchport
+!
+interface Ethernet5/22/2
+   no switchport
+!
+interface Ethernet5/22/3
+   no switchport
+!
+interface Ethernet5/22/4
+   no switchport
+!
+interface Ethernet5/23/1
+   no switchport
+!
+interface Ethernet5/23/2
+   no switchport
+!
+interface Ethernet5/23/3
+   no switchport
+!
+interface Ethernet5/23/4
+   no switchport
+!
+interface Ethernet5/24/1
+   no switchport
+!
+interface Ethernet5/24/2
+   no switchport
+!
+interface Ethernet5/24/3
+   no switchport
+!
+interface Ethernet5/24/4
+   no switchport
+!
+interface Ethernet5/25/1
+   no switchport
+!
+interface Ethernet5/25/2
+   no switchport
+!
+interface Ethernet5/25/3
+   no switchport
+!
+interface Ethernet5/25/4
+   no switchport
+!
+interface Ethernet5/26/1
+   no switchport
+!
+interface Ethernet5/26/2
+   no switchport
+!
+interface Ethernet5/26/3
+   no switchport
+!
+interface Ethernet5/26/4
+   no switchport
+!
+interface Ethernet5/27/1
+   no switchport
+!
+interface Ethernet5/27/2
+   no switchport
+!
+interface Ethernet5/27/3
+   no switchport
+!
+interface Ethernet5/27/4
+   no switchport
+!
+interface Ethernet5/28/1
+   no switchport
+!
+interface Ethernet5/28/2
+   no switchport
+!
+interface Ethernet5/28/3
+   no switchport
+!
+interface Ethernet5/28/4
+   no switchport
+!
+interface Ethernet5/29/1
+   no switchport
+!
+interface Ethernet5/29/2
+   no switchport
+!
+interface Ethernet5/29/3
+   no switchport
+!
+interface Ethernet5/29/4
+   no switchport
+!
+interface Ethernet5/30/1
+   no switchport
+!
+interface Ethernet5/30/2
+   no switchport
+!
+interface Ethernet5/30/3
+   no switchport
+!
+interface Ethernet5/30/4
+   no switchport
+!
+interface Ethernet5/31/1
+   no switchport
+!
+interface Ethernet5/31/2
+   no switchport
+!
+interface Ethernet5/31/3
+   no switchport
+!
+interface Ethernet5/31/4
+   no switchport
+!
+interface Ethernet5/32/1
+   no switchport
+!
+interface Ethernet5/32/2
+   no switchport
+!
+interface Ethernet5/32/3
+   no switchport
+!
+interface Ethernet5/32/4
+   no switchport
+!
+interface Ethernet5/33/1
+   no switchport
+!
+interface Ethernet5/33/2
+   no switchport
+!
+interface Ethernet5/33/3
+   no switchport
+!
+interface Ethernet5/33/4
+   no switchport
+!
+interface Ethernet5/34/1
+   no switchport
+!
+interface Ethernet5/34/2
+   no switchport
+!
+interface Ethernet5/34/3
+   no switchport
+!
+interface Ethernet5/34/4
+   no switchport
+!
+interface Ethernet5/35/1
+   no switchport
+!
+interface Ethernet5/35/2
+   no switchport
+!
+interface Ethernet5/35/3
+   no switchport
+!
+interface Ethernet5/35/4
+   no switchport
+!
+interface Ethernet5/36/1
+   no switchport
+!
+interface Ethernet5/36/2
+   no switchport
+!
+interface Ethernet5/36/3
+   no switchport
+!
+interface Ethernet5/36/4
+   no switchport
+!
+interface Loopback0
+   description Loopback interface VRF DEFAULT
+   ip address 10.6.112.1/32
+!
+interface Loopback1
+   description Loopback interface VRF RED
+   vrf RED
+   ip address 10.6.110.1/32
+!
+interface Management1/1
+   description FOR_MANAGMENT
+   ip address 10.6.224.2/20
+!
+interface Management1/2
+!
+interface Vlan110
+   ip address 10.6.100.21/30
+   ip ospf dead-interval 3
+   ip ospf hello-interval 1
+   ip ospf network point-to-point
+   ip ospf authentication message-digest
+   ip ospf area 0.0.0.0
+   ip ospf message-digest-key 1 md5 7 fCfFpjMHGXscvDcWjk+M5Q==
+   pim ipv4 sparse-mode
+!
+interface Vlan111
+   ip address 10.6.100.41/30
+   ip ospf dead-interval 3
+   ip ospf hello-interval 1
+   ip ospf network point-to-point
+   ip ospf authentication message-digest
+   ip ospf area 0.0.0.0
+   ip ospf message-digest-key 1 md5 7 fCfFpjMHGXscvDcWjk+M5Q==
+   pim ipv4 sparse-mode
+!
+interface Vlan120
+   vrf RED
+   ip address 10.6.101.21/30
+   ip ospf dead-interval 3
+   ip ospf hello-interval 1
+   ip ospf network point-to-point
+   ip ospf authentication message-digest
+   ip ospf area 0.0.0.0
+   ip ospf message-digest-key 1 md5 7 PQKNBQ7RM0uJY3Tk7AYPRw==
+   pim ipv4 sparse-mode
+!
+interface Vlan121
+   vrf RED
+   ip address 10.6.101.41/30
+   ip ospf dead-interval 3
+   ip ospf hello-interval 1
+   ip ospf network point-to-point
+   ip ospf authentication message-digest
+   ip ospf area 0.0.0.0
+   ip ospf message-digest-key 1 md5 7 PQKNBQ7RM0uJY3Tk7AYPRw==
+   pim ipv4 sparse-mode
+!
+interface Vlan606
+   description VRF_LEAKING_R1
+   no autostate
+   ip address 10.6.6.1/30
+!
+interface Vlan640
+   description SMPTE_2110_R1
+   mtu 9170
+   no autostate
+   vrf RED
+   ip address 10.6.40.254/24
+   pim ipv4 sparse-mode
+!
+ip access-list AMIX-STUDIO-1
+   10 permit ip host 10.6.114.1 host 232.1.31.1
+!
+ip access-list standard TVC_Mcast_RED
+   10 permit 232.0.0.0/8
+!
+ip routing
+ip routing vrf RED
+!
+ip prefix-list DEF-TO-RED
+   seq 20 permit 10.6.6.0/30
+   seq 30 permit 10.6.2.0/30
+   seq 40 permit 10.6.100.0/30
+   seq 50 permit 10.6.240.0/20
+!
+ip prefix-list RED-TO-DEF
+   seq 20 permit 10.6.40.0/24
+   seq 30 permit 10.6.70.0/30
+!
+ip route 0.0.0.0/0 10.6.239.254
+ip route 10.6.20.0/24 10.6.112.7
+ip route 10.6.21.0/30 10.6.112.7
+ip route 10.6.21.4/30 10.6.112.7
+ip route 10.6.21.8/30 10.6.112.7
+ip route 10.6.21.12/30 10.6.112.7
+ip route 10.6.22.0/30 10.6.112.7
+ip route 10.6.22.4/30 10.6.112.7
+ip route 10.6.22.8/30 10.6.112.7
+ip route 10.6.22.12/30 10.6.112.7
+ip route 10.6.23.0/30 10.6.112.7
+ip route 10.6.23.8/30 10.6.112.7
+ip route 10.6.24.0/30 10.6.112.7
+ip route 10.6.24.8/30 10.6.112.7
+ip route 10.6.30.0/24 10.6.112.7
+ip route 10.6.31.0/30 10.6.112.7
+ip route 10.6.31.8/30 10.6.112.7
+ip route 10.6.32.0/30 10.6.112.7
+ip route 10.6.150.0/24 10.6.112.12
+!
+route-map RM-DEF-TO-RED permit 10
+   match ip address prefix-list DEF-TO-RED
+!
+route-map RM-RED-TO-DEF permit 10
+   match ip address prefix-list RED-TO-DEF
+!
+router general
+   vrf default
+      leak routes source-vrf RED subscribe-policy RM-RED-TO-DEF
+   !
+   vrf RED
+      leak routes source-vrf default subscribe-policy RM-DEF-TO-RED
+!
+router multicast
+   ipv4
+      counters rate period decay 300 seconds
+      routing
+   !
+   vrf RED
+      ipv4
+         routing
+!
+router ospf 1
+   router-id 10.6.112.1
+   auto-cost reference-bandwidth 40000
+   passive-interface default
+   no passive-interface Ethernet3/23
+   no passive-interface Ethernet3/24
+   no passive-interface Ethernet4/21/1
+   no passive-interface Ethernet4/22/1
+   no passive-interface Vlan110
+   no passive-interface Vlan111
+   network 10.6.6.0/30 area 0.0.0.3
+   network 10.6.100.0/24 area 0.0.0.0
+   network 10.6.112.0/24 area 0.0.0.0
+   max-lsa 12000
+   timers spf delay initial 150 150 5000
+   timers lsa rx min interval 20
+   timers lsa tx delay initial 50 50 5000
+   maximum-paths 2
+   timers pacing flood 15
+!
+router ospf 2 vrf RED
+   router-id 10.6.110.1
+   auto-cost reference-bandwidth 100000
+   passive-interface default
+   no passive-interface Ethernet3/25/1
+   no passive-interface Ethernet3/26/1
+   no passive-interface Ethernet3/27/1
+   no passive-interface Ethernet4/25/1
+   no passive-interface Ethernet4/26/1
+   no passive-interface Ethernet4/27/1
+   no passive-interface Ethernet4/36/1
+   no passive-interface Ethernet4/36/2
+   no passive-interface Vlan120
+   no passive-interface Vlan121
+   network 10.6.40.0/24 area 0.0.0.40
+   network 10.6.42.0/30 area 0.0.0.42
+   network 10.6.42.4/30 area 0.0.0.42
+   network 10.6.70.0/30 area 0.0.0.70
+   network 10.6.101.0/24 area 0.0.0.0
+   network 10.6.110.0/24 area 0.0.0.0
+   max-lsa 12000
+   timers spf delay initial 150 150 5000
+   timers lsa rx min interval 20
+   timers lsa tx delay initial 50 50 5000
+   maximum-paths 4
+   timers pacing flood 15
+!
+router pim sparse-mode
+   vrf RED
+      ipv4
+         sg-expiry-timer 150
+         rp address 10.6.110.1
+!
+management api http-commands
+   protocol http localhost
+   no shutdown
+!
+management api gnmi
+   transport grpc SMART
+      port 5909
+   provider eos-native
+!
+management api models
+   provider smash
+      path bridging
+      path routing
+!
+end

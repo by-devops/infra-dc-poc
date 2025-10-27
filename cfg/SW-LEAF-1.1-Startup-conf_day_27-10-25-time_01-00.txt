@@ -1,0 +1,371 @@
+! Startup-config last modified at Thu Nov 14 10:50:09 2024 by admin
+! device: SW-LEAF-1.1-R5 (DCS-7060CX2-32S, EOS-4.28.6.1M)
+!
+! boot system flash:EOS-4.28.6.1M.swi
+!
+no aaa root
+!
+username admin privilege 15 role network-admin secret sha512 $6$/giizXalGy.l8.We$D1bSNCvc879ZVnN3lRSyMjQT9n04176MDAxNGJW24SSFEm9m0ETIRL3FGNvGlqKHCUtbAAohJqBNX48UcYLUT1
+username smartdash privilege 15 role smartdash secret sha512 $6$KG5hmD1Kp5Avinh9$qG3iY.GuFeVQrsOoZdgOCx8I4v/J00pGHfOCJDnM9nCkppkXWpnhrrLplHxOu7vEREWpL36z.68KB1llxtP/S1
+!
+daemon TerminAttr
+   exec /usr/bin/TerminAttr -grpcaddr=10.6.112.7:5910 -allowed_ips=10.6.240.13/32
+   no shutdown
+!
+transceiver qsfp default-mode 4x10G
+!
+service routing protocols model multi-agent
+!
+no logging console
+logging host 10.6.240.149
+logging source-interface Management1
+!
+hostname SW-LEAF-1.1-R5
+!
+ptp domain 77
+ptp source ip 10.6.120.1
+ptp message-type general dscp 56 default
+ptp message-type event dscp 56 default
+ptp ttl 48
+ptp mode boundary
+ptp management all
+!
+snmp-server community zabbix ro
+!
+spanning-tree mode rstp
+!
+clock timezone Europe/Moscow
+!
+vlan 610
+   name SMPTE_2110_R5
+!
+vrf instance RED
+!
+management api http-commands
+   protocol http localhost
+   no shutdown
+!
+management api gnmi
+   transport grpc SMART
+      port 5909
+   provider eos-native
+!
+management api models
+   provider smash
+      path bridging
+      path routing
+!
+aaa authorization exec default local
+!
+interface Ethernet1/1
+   description EDGE-1.1_RED
+   speed forced 100gfull
+   switchport access vlan 610
+   ptp enable
+   ptp sync-message interval -3
+   ptp announce interval 0
+   ptp delay-req interval -3
+   ptp role master
+!
+interface Ethernet2/1
+   description EDGE-1.2_RED
+   speed forced 100gfull
+   switchport access vlan 610
+   ptp enable
+   ptp sync-message interval -3
+   ptp announce interval 0
+   ptp delay-req interval -3
+   ptp role master
+!
+interface Ethernet3/1
+   description EDGE-1.3_RED
+   speed forced 100gfull
+   switchport access vlan 610
+   ptp enable
+   ptp sync-message interval -3
+   ptp announce interval 0
+   ptp delay-req interval -3
+   ptp role master
+!
+interface Ethernet4/1
+!
+interface Ethernet5/1
+   description TEMP CONV 1.1 RED
+   speed forced 40gfull
+   switchport access vlan 610
+   ptp enable
+   ptp sync-message interval -3
+   ptp announce interval 0
+   ptp delay-req interval -3
+   ptp role master
+!
+interface Ethernet6/1
+!
+interface Ethernet7/1
+   description DMV 1.1 RED
+   speed forced 40gfull
+   switchport access vlan 610
+   ptp enable
+   ptp sync-message interval -3
+   ptp announce interval 0
+   ptp delay-req interval -3
+   ptp role master
+!
+interface Ethernet8/1
+   description DMV 1.2 RED
+   speed forced 40gfull
+   switchport access vlan 610
+   ptp enable
+   ptp sync-message interval -3
+   ptp announce interval 0
+   ptp delay-req interval -3
+   ptp role master
+!
+interface Ethernet9/1
+   description DMV 1.3 RED
+   speed forced 40gfull
+   switchport access vlan 610
+   ptp enable
+   ptp sync-message interval -3
+   ptp announce interval 0
+   ptp delay-req interval -3
+   ptp role master
+!
+interface Ethernet10/1
+!
+interface Ethernet11/1
+!
+interface Ethernet12/1
+!
+interface Ethernet13/1
+   description IPVU 1.1_RED_L1
+   speed forced 25gfull
+   error-correction encoding fire-code
+   switchport access vlan 610
+   ptp enable
+   ptp sync-message interval -3
+   ptp announce interval 0
+   ptp delay-req interval -3
+   ptp role master
+!
+interface Ethernet13/2
+   description IPVU 1.2_RED_L1
+   speed forced 25gfull
+   error-correction encoding fire-code
+   switchport access vlan 610
+   ptp enable
+   ptp sync-message interval -3
+   ptp announce interval 0
+   ptp delay-req interval -3
+   ptp role master
+!
+interface Ethernet13/3
+   description IPVU 1.3_RED_L1
+   speed forced 25gfull
+   error-correction encoding fire-code
+   switchport access vlan 610
+   ptp enable
+   ptp sync-message interval -3
+   ptp announce interval 0
+   ptp delay-req interval -3
+   ptp role master
+!
+interface Ethernet13/4
+   description IPVU 1.4_RED_L1
+   speed forced 25gfull
+   error-correction encoding fire-code
+   switchport access vlan 610
+   ptp enable
+   ptp sync-message interval -3
+   ptp announce interval 0
+   ptp delay-req interval -3
+   ptp role master
+!
+interface Ethernet14/1
+   description PRISM_ASB-1_RED_L1
+   speed forced 25gfull
+   error-correction encoding reed-solomon
+   switchport access vlan 610
+   ptp enable
+   ptp sync-message interval -3
+   ptp announce interval 0
+   ptp delay-req interval -3
+   ptp role master
+!
+interface Ethernet14/2
+!
+interface Ethernet14/3
+!
+interface Ethernet14/4
+!
+interface Ethernet15/1
+!
+interface Ethernet16/1
+!
+interface Ethernet17/1
+!
+interface Ethernet18/1
+!
+interface Ethernet19/1
+!
+interface Ethernet20/1
+!
+interface Ethernet21/1
+!
+interface Ethernet22/1
+!
+interface Ethernet23/1
+!
+interface Ethernet24/1
+!
+interface Ethernet25/1
+!
+interface Ethernet26/1
+!
+interface Ethernet27/1
+!
+interface Ethernet28/1
+!
+interface Ethernet29/1
+!
+interface Ethernet30/1
+   description TO_R1_VRF_default
+   mtu 9170
+   speed forced 40gfull
+   no switchport
+   ip address 10.6.100.10/30
+   ip ospf dead-interval 3
+   ip ospf hello-interval 1
+   ip ospf network point-to-point
+   ip ospf authentication message-digest
+   ip ospf area 0.0.0.0
+   ip ospf message-digest-key 1 md5 7 gx2XyQiQpUBMMFYuiwlMLA==
+   pim ipv4 sparse-mode
+   ptp enable
+   ptp sync-message interval -3
+   ptp announce interval 0
+   ptp delay-req interval -3
+!
+interface Ethernet31/1
+   description TO_R1_VRF_RED_LINK_1
+   mtu 9170
+   speed forced 100gfull
+   no switchport
+   vrf RED
+   ip address 10.6.101.26/30
+   ip ospf dead-interval 3
+   ip ospf hello-interval 1
+   ip ospf network point-to-point
+   ip ospf authentication message-digest
+   ip ospf area 0.0.0.0
+   ip ospf message-digest-key 1 md5 7 gx2XyQiQpUBMMFYuiwlMLA==
+   pim ipv4 sparse-mode
+   ptp enable
+   ptp sync-message interval -3
+   ptp announce interval 0
+   ptp delay-req interval -3
+!
+interface Ethernet32/1
+   description TO_R1_VRF_RED_LINK_2
+   mtu 9170
+   speed forced 100gfull
+   no switchport
+   vrf RED
+   ip address 10.6.101.29/30
+   ip ospf dead-interval 3
+   ip ospf hello-interval 1
+   ip ospf network point-to-point
+   ip ospf authentication message-digest
+   ip ospf area 0.0.0.0
+   ip ospf message-digest-key 1 md5 7 nQ5h0jWow7/s2y78qkQzHA==
+   pim ipv4 sparse-mode
+   ptp enable
+   ptp sync-message interval -3
+   ptp announce interval 0
+   ptp delay-req interval -3
+!
+interface Ethernet33
+!
+interface Ethernet34
+!
+interface Loopback0
+   description Loopback interface VRF DEFAULT
+   ip address 10.6.112.5/32
+!
+interface Loopback1
+   description Loopback interface VRF RED
+   vrf RED
+   ip address 10.6.110.5/32
+!
+interface Management1
+   description FOR_MANAGMENT
+   ip address 10.6.236.1/20
+!
+interface Vlan610
+   description SMPTE_2110_20_R5
+   mtu 9170
+   vrf RED
+   ip address 10.6.10.254/24
+   pim ipv4 sparse-mode
+!
+ip access-list standard TVC_Mcast_RED
+   10 permit 232.0.0.0/8
+!
+ip routing
+ip routing vrf RED
+!
+ip route 0.0.0.0/0 10.6.239.254
+!
+role smartdash
+   10 deny command reload
+   20 deny mode config command .*
+   30 permit command show .*
+   35 permit command enable
+   40 permit command bash
+   50 deny command .*
+!
+router multicast
+   ipv4
+      routing
+   !
+   vrf RED
+      ipv4
+         routing
+!
+router ospf 1
+   router-id 10.6.112.5
+   auto-cost reference-bandwidth 40000
+   passive-interface default
+   no passive-interface Ethernet30/1
+   network 10.6.100.0/24 area 0.0.0.0
+   network 10.6.112.0/24 area 0.0.0.0
+   max-lsa 12000
+   timers spf delay initial 150 150 5000
+   timers lsa rx min interval 20
+   timers lsa tx delay initial 50 50 5000
+   maximum-paths 2
+   timers pacing flood 15
+!
+router ospf 2 vrf RED
+   router-id 10.6.110.5
+   auto-cost reference-bandwidth 100000
+   passive-interface default
+   no passive-interface Ethernet31/1
+   no passive-interface Ethernet32/1
+   network 10.6.10.0/24 area 0.0.0.20
+   network 10.6.101.0/24 area 0.0.0.0
+   network 10.6.110.0/24 area 0.0.0.0
+   max-lsa 12000
+   timers spf delay initial 150 150 5000
+   timers lsa rx min interval 20
+   timers lsa tx delay initial 50 50 5000
+   maximum-paths 2
+   timers pacing flood 15
+!
+router pim sparse-mode
+   vrf RED
+      ipv4
+         sg-expiry-timer 150
+         rp address 10.6.110.1
+!
+end
